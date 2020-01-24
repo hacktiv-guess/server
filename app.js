@@ -83,6 +83,7 @@ io.on('connection', function(socket) {
                 // delete the namespace
             })
         })
+        socket.join(roomNameSlug)
     })
 
     socket.on('joinRoom', function(joinRoomData) {
