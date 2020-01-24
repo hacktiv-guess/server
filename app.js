@@ -52,7 +52,13 @@ io.on('connection', function(socket) {
         const room = io.of(roomNameSlug)
 
         room.on('connection', function(roomSocket) {
-            room.emit('joinInfo', `${rooms[roomIndex].players[1]} has joined room: ${newRoomData.roomName}`)
+            room.emit('joinInfo', `${rooms[roomIndex].players[0]} has joined this room`)
+
+            roomSocket.on('leaveRoom', function(username) {
+                roomSocket.leave(roomNameSlug)
+                room.emit('leaveInfo', `${username} has left this room`)
+            })
+
 
             roomSocket.on('startGame', function() {
                 rooms[roomIndex].status = 'playing'
