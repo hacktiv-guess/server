@@ -26,6 +26,8 @@ function gameInit() {
 
 const rooms = []
 
+rooms.
+
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html')
 })
@@ -84,6 +86,7 @@ io.on('connection', function(socket) {
             })
         })
         socket.join(roomNameSlug)
+        socket.emit('roomJoined', rooms[roomIndex])
     })
 
     socket.on('joinRoom', function(joinRoomData) {
@@ -101,6 +104,7 @@ io.on('connection', function(socket) {
 
             const roomNameSlug = joinRoomData.roomName.split(' ').join('-')
             socket.join(roomNameSlug)
+            socket.emit('roomJoined', rooms[roomIndex])
         }
     })
 })
