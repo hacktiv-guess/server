@@ -59,7 +59,6 @@ io.on('connection', function(socket) {
                 room.emit('leaveInfo', `${username} has left this room`)
             })
 
-
             roomSocket.on('startGame', function() {
                 rooms[roomIndex].status = 'playing'
                 room.emit('gameStart')
@@ -84,6 +83,8 @@ io.on('connection', function(socket) {
             })
         })
         socket.join(roomNameSlug)
+        socket.emit('roomJoined', rooms[roomIndex])
+        io.emit('sendRooms', rooms)
     })
 
     socket.on('joinRoom', function(joinRoomData) {
@@ -101,6 +102,7 @@ io.on('connection', function(socket) {
 
             const roomNameSlug = joinRoomData.roomName.split(' ').join('-')
             socket.join(roomNameSlug)
+            socket.emit('roomJoined', rooms[roomIndex])
         }
     })
 })
