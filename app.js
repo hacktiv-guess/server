@@ -26,8 +26,6 @@ function gameInit() {
 
 const rooms = []
 
-rooms.
-
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html')
 })
@@ -61,7 +59,6 @@ io.on('connection', function(socket) {
                 room.emit('leaveInfo', `${username} has left this room`)
             })
 
-
             roomSocket.on('startGame', function() {
                 rooms[roomIndex].status = 'playing'
                 room.emit('gameStart')
@@ -87,6 +84,7 @@ io.on('connection', function(socket) {
         })
         socket.join(roomNameSlug)
         socket.emit('roomJoined', rooms[roomIndex])
+        io.emit('sendRooms', rooms)
     })
 
     socket.on('joinRoom', function(joinRoomData) {
