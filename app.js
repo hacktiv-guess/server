@@ -4,6 +4,8 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const port = process.env.PORT || 3000
 
+let set = []
+
 function createRandomSet() {
     const set = []
 
@@ -16,14 +18,11 @@ function createRandomSet() {
 }
 
 function gameInit() {
+    set = []
     for(let i = 0; i < 25; i++) {
-        set.push(createRandomSet)
+        set.push(createRandomSet())
     }
 }
-
-const set = []
-
-gameInit()
 
 const rooms = []
 
@@ -39,10 +38,13 @@ io.on('connection', function(socket) {
     })
 
     socket.on('makeRoom', function(newRoomData) {
+        gameInit()
+
         rooms.push({
             roomName: newRoomData.roomName,
             players: [newRoomData.username],
-            status: 'waiting'
+            status: 'waiting',
+            allSet: set
         })
 
         const roomIndex = rooms.length-1
@@ -70,8 +72,8 @@ io.on('connection', function(socket) {
                 room.emit('gameEnd')
                 
                 // delete the room from array using slice
-
                 rooms.splice(roomIndex, 1)
+
                 // delete the namespace
             })
         })
@@ -94,9 +96,4 @@ io.on('connection', function(socket) {
             socket.join(roomNameSlug)
         }
     })
-
-    // socket.on('deleteRoom', function() {})
-    // socket.on('startGame', function() {})
-    // socket.on('signalSetSuccess', function() {})
-    // socket.on('signalSetFail', function() {})
 })
